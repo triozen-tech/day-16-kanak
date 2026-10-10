@@ -1,1 +1,445 @@
-/* Brand-specific styles for THIS site (buttons, eyebrow, special effects). Written in Round 1. */
+/* Kanak Jewels · ivory & soft gold (site/DESIGN.md). Site classes live in @layer components (lesson 46). */
+:root {
+  --ivory: #f6efe3;
+  --paper: #fbf7f0;
+  --sand: #e9dcc6;
+  --ink: #2b2117;
+  --gold: #a87a2a;
+  --gold-light: #c9a04a;
+  --gold-glow: rgba(255, 226, 168, 0.75);
+  --kj-line: #d9c8ac;
+}
+
+html,
+body {
+  overflow-x: clip; /* lesson 76 */
+}
+
+@layer components {
+  .kj-display {
+    font-family: "Italiana", serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+  .kj-script {
+    font-family: "Pinyon Script", cursive;
+  }
+  .kj-eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .kj-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 28px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    overflow: hidden;
+    isolation: isolate;
+    white-space: nowrap;
+  }
+  /* fill wipes left → right on hover (Hover map) */
+  .kj-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .kj-btn:hover::before {
+    transform: scaleX(1);
+  }
+  .kj-btn.ghost {
+    background: transparent;
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--ink);
+  }
+  .kj-btn.ghost:hover {
+    color: var(--paper);
+  }
+  .kj-link {
+    background: linear-gradient(var(--gold), var(--gold)) left bottom / 0 1px no-repeat;
+    transition: background-size 0.45s ease;
+    padding-bottom: 2px;
+  }
+  .kj-link:hover {
+    background-size: 100% 1px;
+  }
+  .kj-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow:
+      0 0 0 1px var(--kj-line),
+      0 24px 50px rgba(90, 62, 22, 0.1);
+  }
+  /* S3 soft arch edge: a section's top meets the previous one on a shallow arch */
+  .kj-arch-top {
+    clip-path: ellipse(calc(130% + var(--arch, 0) * 170%) 100% at 50% 100%);
+  }
+  .kj-chip {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 1px solid var(--kj-line);
+    background: #fff;
+    color: var(--ink);
+    transition:
+      background 0.3s,
+      color 0.3s,
+      border-color 0.3s;
+  }
+  .kj-chip[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  /* chips over a sliding filled pill: the pill carries the fill, the chip only its text colour */
+  .kj-chip-slide {
+    background: transparent;
+    transition:
+      color 0.4s 0.1s,
+      border-color 0.3s;
+  }
+  .kj-chip-slide[aria-pressed="true"] {
+    background: transparent;
+  }
+  .kj-chip:hover {
+    border-color: var(--gold);
+  }
+  /* hero letters: ETERNAL in soft sand-bronze behind the necklace, GOLD in a gold gradient in front of it */
+  /* ETERNAL: sand-bronze; GOLD: gold gradient. Both carry the M49 light band (first background layer) on a 4.2 s loop. */
+  .kj-letters-behind,
+  .kj-letters-gold {
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-repeat: no-repeat;
+    background-size:
+      320% 100%,
+      100% 100%;
+    background-position:
+      150% 0,
+      0 0;
+    animation: kj-letter-sweep 4.2s linear infinite;
+  }
+  .kj-letters-behind {
+    background-image:
+      linear-gradient(100deg, transparent 42%, rgba(255, 244, 218, 0.85) 50%, transparent 58%),
+      linear-gradient(#b39066, #b39066);
+    filter: drop-shadow(0 1px 0 rgba(255, 250, 240, 0.6));
+  }
+  .kj-letters-gold {
+    background-image:
+      linear-gradient(100deg, transparent 42%, rgba(255, 240, 200, 0.95) 50%, transparent 58%),
+      linear-gradient(180deg, #d9b25e 0%, #a87a2a 55%, #7d5716 100%);
+    filter: drop-shadow(0 2px 14px rgba(150, 105, 40, 0.18));
+    animation-delay: 1.1s;
+  }
+  /* the band over the necklace (masked to the cut-out in HaloHero) */
+  .kj-sweep {
+    background: linear-gradient(100deg, transparent 40%, rgba(255, 246, 222, 0.78) 49%, rgba(255, 255, 248, 0.95) 50%, rgba(255, 246, 222, 0.78) 51%, transparent 60%) no-repeat;
+    background-size: 300% 100%;
+    background-position: 140% 0;
+    mix-blend-mode: screen;
+    animation: kj-sweep 4.2s linear infinite;
+  }
+  .kj-glint,
+  .kj-pearl,
+  .kj-ruby {
+    position: absolute;
+    translate: -50% -50%;
+    border-radius: 50%;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+  .kj-glint {
+    width: 1.6%;
+    aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(255, 252, 238, 0.95) 0, rgba(255, 236, 190, 0.55) 22%, transparent 62%);
+    opacity: 0;
+    animation: kj-glint 4.2s ease-in-out infinite;
+  }
+  .kj-pearl {
+    width: 0.9%;
+    aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0, rgba(255, 250, 235, 0.45) 35%, transparent 70%);
+    animation: kj-breathe 2.6s ease-in-out infinite;
+  }
+  .kj-ruby {
+    width: 2.2%;
+    aspect-ratio: 0.8;
+    background: radial-gradient(ellipse, rgba(255, 210, 220, 0.75) 0, rgba(255, 120, 140, 0.25) 35%, transparent 70%);
+    animation: kj-breathe 3.2s ease-in-out infinite;
+  }
+  /* Italiana draws an almost straight opening quote: both marks come from a serif with true curly quotes */
+  .kj-quote {
+    font-family: "Iowan Old Style", Georgia, "Times New Roman", serif;
+    color: var(--gold);
+    font-size: 1.05em;
+  }
+  .kj-num {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@keyframes kj-sweep {
+  from {
+    background-position: 140% 0;
+  }
+  to {
+    background-position: -40% 0;
+  }
+}
+@keyframes kj-letter-sweep {
+  from {
+    background-position:
+      150% 0,
+      0 0;
+  }
+  to {
+    background-position:
+      -50% 0,
+      0 0;
+  }
+}
+@keyframes kj-glint {
+  0%,
+  100% {
+    opacity: 0;
+    scale: 0.6;
+  }
+  8% {
+    opacity: 1;
+    scale: 1.15;
+  }
+  18% {
+    opacity: 0;
+    scale: 0.8;
+  }
+}
+@keyframes kj-breathe {
+  0%,
+  100% {
+    opacity: 0.15;
+    scale: 0.85;
+  }
+  50% {
+    opacity: 0.85;
+    scale: 1.1;
+  }
+}
+/* ?static=1: every CSS loop stops in its final, calm state */
+html.is-static .kj-anim {
+  animation: none !important;
+}
+html.is-static .kj-glint {
+  opacity: 0;
+}
+html.is-static .kj-pearl,
+html.is-static .kj-ruby {
+  opacity: 0.35;
+}
+html.is-static .kj-sweep {
+  opacity: 0;
+}
+
+/* a broad soft band of warm light that keeps crossing a section (lessons 55, 108: broad, never thin), so record holds
+   are never still. Colour + blend per use: --band, --band-blend, --band-dur. ?static=1: hidden. */
+.kj-band {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: var(--band-blend, screen);
+}
+.kj-band::before,
+.kj-band.twin::after {
+  content: "";
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: 0;
+  width: 50%;
+  background: linear-gradient(100deg, transparent 0%, var(--band, rgba(255, 240, 205, 0.5)) 50%, transparent 100%);
+  animation: kj-band var(--band-dur, 3.6s) linear infinite;
+  animation-delay: var(--band-delay, 0s);
+}
+/* .twin: a second band half a cycle behind, so one is always crossing the open part of a busy section */
+.kj-band.twin::after {
+  animation-delay: calc(var(--band-dur, 3.6s) / -2);
+}
+@keyframes kj-band {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(200%);
+  }
+}
+html.is-static .kj-band {
+  display: none;
+}
+/* the hero breathes in and out on the clock (inside the scroll push-in) */
+.kj-breath {
+  animation: kj-breath 6s ease-in-out infinite alternate;
+}
+@keyframes kj-breath {
+  from {
+    scale: 1;
+  }
+  to {
+    scale: 1.035;
+  }
+}
+/* loader: a broad gold glow swells behind the coin */
+.kj-coin-glow {
+  position: absolute;
+  width: 900px;
+  height: 900px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 196, 120, 0.55) 0, rgba(232, 196, 120, 0.18) 38%, transparent 66%);
+  animation: kj-coin-glow 2.4s ease-in-out both;
+}
+@keyframes kj-coin-glow {
+  from {
+    scale: 0.25;
+    opacity: 0.2;
+  }
+  to {
+    scale: 1.3;
+    opacity: 1;
+  }
+}
+
+
+/* I31 coin: spins 540° around Y from the first paint, then once more to land on its face */
+.kj-coin {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='24.5' fill='none' stroke='%237a5212' stroke-width='1.2'/><path d='M24 18v28M24 33l14-15M28.5 28.5L40 46' fill='none' stroke='%232b2117' stroke-width='3.2' stroke-linecap='round'/></svg>") center / 100% no-repeat,
+    radial-gradient(circle at 35% 30%, #f6dc96, #c9a04a 55%, #7a5212);
+  box-shadow:
+    0 0 0 2px rgba(122, 82, 18, 0.35),
+    0 24px 40px rgba(90, 60, 20, 0.25);
+  animation: kj-coin 1.7s cubic-bezier(0.45, 0, 0.55, 1) both;
+}
+@keyframes kj-coin {
+  from {
+    transform: perspective(600px) rotateY(0deg);
+  }
+  to {
+    transform: perspective(600px) rotateY(720deg);
+  }
+}
+
+/* Bag count: digits roll (lesson 85: digits only) */
+@keyframes kj-roll-in {
+  from {
+    translate: 0 110%;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+@keyframes kj-roll-out {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -110%;
+  }
+}
+
+/* M103: the seal's text ring turns slowly, always */
+.kj-spin {
+  animation: kj-spin 14s linear infinite;
+}
+@keyframes kj-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+html.is-static .kj-spin {
+  animation: none;
+}
+
+/* festive band: a broad warm glow drifts behind the deck (broad, lesson 108) */
+.kj-glow-drift {
+  background: radial-gradient(closest-side, rgba(214, 160, 70, 0.34), rgba(214, 160, 70, 0.1) 55%, transparent);
+  animation: kj-glow-drift 5s ease-in-out infinite alternate;
+}
+@keyframes kj-glow-drift {
+  from {
+    translate: -62% 0;
+    scale: 0.9;
+  }
+  to {
+    translate: -38% -40px;
+    scale: 1.1;
+  }
+}
+html.is-static .kj-glow-drift {
+  animation: none;
+}
+
+/* X14: soft warm haze over the bleed, drifting sideways */
+.kj-haze {
+  background:
+    radial-gradient(40% 60% at 20% 60%, rgba(201, 150, 70, 0.22), transparent 70%),
+    radial-gradient(35% 55% at 70% 50%, rgba(201, 150, 70, 0.18), transparent 70%);
+  filter: blur(12px);
+  animation: kj-haze 7s ease-in-out infinite alternate;
+}
+@keyframes kj-haze {
+  to {
+    translate: 12% 0;
+  }
+}
+html.is-static .kj-haze {
+  animation: none;
+}
+
+/* ?static=1: the hero zoom pin collapses to one screen (the resting hero) */
+html.is-static [data-hero-pin] {
+  height: auto !important;
+}
+
+/* collections: pieces bob gently on the clock (transform only: their translate/rotate/scale come from the scroll) */
+.kj-bob {
+  animation: kj-bob 3.4s ease-in-out infinite alternate;
+}
+.kj-bob-slow {
+  animation-duration: 4.6s;
+}
+@keyframes kj-bob {
+  from {
+    transform: translateY(-9px);
+  }
+  to {
+    transform: translateY(9px);
+  }
+}
+html.is-static .kj-bob {
+  animation: none;
+}
+html.is-static #collections {
+  margin-top: 0;
+}

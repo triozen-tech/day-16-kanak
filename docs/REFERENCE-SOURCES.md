@@ -13,7 +13,8 @@ Where Round 0's per-section reference board comes from (CLAUDE.md Round 0 step 1
    - Each section is then filled up to 3 options from the allowed live sites below: 1 same business + 2 any business, creative/award work before big-brand shops.
    - Each section also gets 1 live clip of hover or motion.
    - Claude writes one "what to take from it" line + tag per option, then `--board`.
-5. **Picks:** the user picks 1 per section, saved with `npm run refs -- <day> --pick "hero=B,product=A,…"`. **DESIGN.md** is written from the picks (CLAUDE.md Round 0 step 9).
+5. **Layout options (usual case):** when the inbox covers only some sections, Claude builds 2–3 full-page layout mockups in `day<N>/refs/layouts/`. Any reference can inspire any section, and the sections nobody saved are our own design. The user picks one, and it becomes the DESIGN.md direction.
+6. **Picks (when every section is covered):** the user picks 1 per section, saved with `npm run refs -- <day> --pick "hero=B,product=A,…"`. **DESIGN.md** is written from the picks (CLAUDE.md Round 0 step 9).
 
 **Automated column** (the board's live-site fill)
 - **yes**: the collector may open it. No clause against it was found, and robots.txt allows the path we use. We stay at human speed: ≤ 30 page loads per run, 2.5–6 s pauses, screenshots and short clips only.

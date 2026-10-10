@@ -1,31 +1,35 @@
 ---
 name: flow-prompts
-description: Write Google Flow (Nano Banana image + Veo video) prompts for a site's assets: key images, start/end frames, video timelines, covers. Includes aspect ratio, file type (.jpg vs .png), and our Veo rules. Use when the user needs assets generated for a site (Round 0 "assets still needed"), a reel cover, or asks for Flow/Veo prompts.
+description: Asset specs for Google Flow (Nano Banana stills, Veo video) WITHOUT writing prompts. Use it to write the asset list in DESIGN.md (what each asset is, size, file type, which image an edit attaches, code fallback), to check assets that come back from Flow, and to record the prompts the user pastes back under "Prompts (as run)". Claude Code never writes or prints Flow/Veo prompts.
 ---
 
-# Google Flow prompts
+# Flow assets (specs, checks, records: never prompts)
 
-Base templates: `docs/AI-VIDEO-PROMPTS.md` (A–H). Read `docs/LESSONS.md` → "Assets".
+**Permanent rule:** Claude Code never writes or prints Flow / Veo prompts: not in chat, not in DESIGN.md, not in any file. The user's director writes the prompts and gives them to the user in chat, batch by batch. Read `docs/LESSONS.md` → "Assets" first.
 
-## For every asset give
-1. **File name** + where it goes (`raw/<name>.mp4`, `public/images/<slug>/<name>.webp`).
-2. **Aspect ratio** and size: 16:9 (1920×1080) for scroll videos and wide images · 9:16 (1080×1920) for covers · 3:4 / 4:5 for product cards · 1:1 for cut-outs. Say: **"check the ratio chip in Flow before generating"** (it keeps the last one used).
-3. **File type:** `.jpg` for everything with a background; **`.png` only when it must be transparent** (cut-out products for colour switchers / pop cards). We convert to WebP ourselves.
-4. **The prompt** (subject, light, camera, mood that matches DESIGN.md; "no text, no logos" unless text is wanted).
-5. For videos, a **timeline**: what happens second by second, e.g. `0–2 s slow push-in · 2.5 s cap pops · 3–4.5 s fizz rises · 4.5–6 s settles`. Put the key moment **early (2–4 s)**.
+## 1. The asset list in DESIGN.md (Round 0)
+For every asset give, in plain words (a description, not a prompt):
+1. **ID + what it shows**: subject, setting, mood in one line (e.g. "the necklace on a three-tier ivory podium under a soft halo light").
+2. **Use**: which section and how (hero scrub, cut-out, loupe, crossfade pair …).
+3. **Source and how**: Flow image · Flow edit of <ID> (**say which image to attach**, e.g. "attach only A7" for a pixel-aligned pair) · Flow Veo from <ID> · code · Blender (rarely, lesson 113).
+4. **Size / file**: aspect (16:9 for scroll films and wide images · 9:16 covers · 3:4 / 4:5 cards · 1:1 cut-outs), download size (e.g. 2K), file type (`.jpg` with a background; `.png` only when it must be transparent; we convert to WebP ourselves).
+5. **Code fallback** if Flow credits run short (code tint, crop, code-drawn shape, reuse of another cut-out), or "must have".
+6. The day's asset rules (e.g. "no faces, no hands, no models").
 
-## Our Veo rules
-- An **end frame always needs a start frame** (Flow ignores an end frame alone). Make both images first, same style and light.
-- **Dark start frames:** attach a **reference image** too (the product lit), or Veo invents a different product out of the dark.
-- **Use the early seconds:** plan the action in the first 4–6 s; later seconds drift or morph. We trim later.
-- **Watermark:** Veo puts a small mark bottom-right; our frame tool paints it out (`delogo`). Keep the subject away from that corner.
-- Same product in every clip: always start from the same key image (Nano Banana) and say "keep the product exactly as in the reference".
-- **Covers (9:16):** keep headline text **15–40% from the top**, the product in the middle; nothing important in the top 14% / bottom 25% / right edge (Instagram UI). Then run `cover-check`.
+## 2. Rules the assets must meet (check results against these)
+- **Same product everywhere:** angles, variants and try-on stills are Flow **edits of one master image** (the master attached), so every shot shows the same piece.
+- **Pixel-aligned pairs** (before/after, 22K/18K, day/night): the edit attaches only the master; measure and undo any sub-pixel shift before using them as a crossfade pair (lessons 92, 117).
+- **Veo:** keep the camera locked and the motion simple (slow push-in, steady light); light sweeps, glints and colour changes are done in code over the film. An end frame always needs a start frame. Use the early seconds; later ones drift. Start = end frame gives a loopable clip, but bake a crossfade into the seam (lessons 68, 90). Never the word "mist"/"fog" in anything sent to Veo (lesson 90).
+- **Marks:** Nano Banana stills may carry a ✦ mark bottom-right; check with a high-pass, paint it out with `npm run clean-mark` (lessons 92, 112, 118). Veo burns marks in its start frame into every frame (lesson 116): give Veo the cleaned still.
+- **Covers (9:16):** headline 15–40 % from the top, the object in the middle; nothing important in the top 14 % / bottom 25 % / right edge; then `cover-check`.
 - One mood and colour grade across all assets of a site.
 
-## Travelling / floating object assets (F1–F8, see MOTION-MENU K)
-- **Cut-out angles (F1, F7):** 5 Flow images of the SAME product: **front, 3/4, side, back, top**. Attach the key image as **reference** in every prompt ("keep the product exactly as in the reference"), **plain dark background** (or plain mid-grey for light products), soft studio light, the product fully in frame with margin, no props touching it, **.jpg** at 1:1 (2048 px). Then `npm run cutout -- raw/angles public/images/<slug>/angles` (rembg + BiRefNet, MIT) → transparent PNG → WebP. Check edges on dark AND light.
-  Prompt: *"[Product] standing upright, [front / three-quarter view rotated 45° / exact side profile / back / seen from directly above], centred, full product visible with space around it, plain [dark charcoal] seamless background, soft even studio light, sharp, photographic, no shadow on the background, no text, no props."*
-- **Floating ingredients (F7):** one Flow image per ingredient (lime slice, ice cube, mint leaf …), same light, plain background, .jpg → `npm run cutout`.
-- **Turntable (rotating 2D object):** a Flow **video** of the product turning 360° on a plain background: start frame = the front cut-out image (reference attached), *"the product slowly rotates one full turn on a turntable, camera locked, plain [dark] background, even light, no cuts"*, 16:9, use the first 6–8 s. Then (skill `video-frames`): frames → `npm run cutout` on the folder → WebP → pass them as `angles` to `ObjectPNG` (36 frames ≈ one every 10°).
-- **3D model (F2, F3, F6):** the best front/3-4 image → **TRELLIS.2** (MIT, Hugging Face Space `microsoft/TRELLIS.2`) or **Stable3DGen/Hi3DGen** (MIT, commercial-clean) → .glb → `npm run glb -- in.glb public/<…>/model.glb --ogl` (≤ 3 MB). Do **not** use Hunyuan3D (licence excludes EU/UK/KR, MAU limit) unless the user approves. Check the model from all sides before using it.
+## 3. Processing what comes back
+- **Cut-outs:** `npm run cutout -- <folder> [out]` (rembg + BiRefNet, MIT) → transparent PNG → WebP; check edges on dark AND light.
+- **Scroll films:** skill `video-frames` (`site/frames.json` + `npm run film-frames`).
+- **Turntable from a Veo spin video:** frames → `npm run cutout` on the folder → WebP → `angles` for `ObjectPNG` (36 frames ≈ one every 10°).
+- **3D model (F2, F3, F6):** the best front/3-4 image → TRELLIS.2 or Stable3DGen/Hi3DGen (MIT) → `npm run glb -- in.glb out.glb --ogl` (≤ 3 MB). Not Hunyuan3D unless the user approves. Check the model from all sides.
+- **Travelling-object angles (F1, F7):** list 5 views of the SAME product (front, 3/4, side, back, top) as Flow edits of the key image, plain background, 1:1 at 2048 px, then cut out.
+
+## 4. Recording the prompts that were run
+When the user pastes back the prompts they ran, add them **word for word** to `site/DESIGN.md` under **"## Prompts (as run)"**: asset ID · date · the prompt exactly as pasted · attachments (which images were attached) · result notes (kept / redone / fallback used). Never rewrite, shorten or "improve" them.

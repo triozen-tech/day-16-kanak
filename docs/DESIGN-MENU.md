@@ -237,3 +237,14 @@ More loaders (live in `/lab`; each: good for · avoid with):
 ## How "restyle a pattern" works
 
 Patterns in `components/patterns/` are **starting points**. For each one used, copy it into `site/components/`, rename it for the brand (e.g. `FlavourCards.tsx`) and change at least **3** of: layout proportions, type scale/case, card shape, colours used, spacing, image shape, the motion. Two sites using `ProductGrid` must not look alike.
+
+## Layout options from references (Round 0)
+
+When the user's reference inbox covers only some sections, Round 0 offers **2–3 complete full-page layouts** instead of per-section picks (CLAUDE.md Round 0 step 1).
+
+- **Mix references freely.** Any reference can inspire any section: a drinks site's product card can shape a jewellery card.
+- **Make each layout a different direction.** Each takes its own look, palette, type pair, nav, hero, collection and card treatment, all picked from this menu and all passing the uniqueness rule against the last 3 sites.
+- **Design the missing sections ourselves**, in the same language as the layout.
+- **Build each layout as a static mockup** at 1440 wide in `day<N>/refs/layouts/`, with code-drawn placeholders, every section labelled with its reference or "ours".
+- **The user picks one**, and it becomes the site's direction.
+

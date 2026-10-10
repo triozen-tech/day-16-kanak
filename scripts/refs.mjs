@@ -108,7 +108,7 @@ if (opts.sections) {
     const [id, name] = raw.split(":").map((x) => x.trim());
     const def = CFG.sections[id];
     if (!def && !name) console.log(`! "${id}" is not in the section library: give it a name ("${id}:My name") and words in sections.json`);
-    return { id, name: name || def?.name || id, want: def?.want ?? "", kind: def?.kind ?? "text", words: def?.words ?? id };
+    return { id, name: name || def?.name || id, want: def?.want ?? "", kind: def?.kind ?? "text", words: def?.words ?? id, search: def?.search ?? (name || id).toLowerCase() };
   });
   mkdirSync(INBOX, { recursive: true });
   writeFileSync(SECTIONS_FILE, JSON.stringify({ day, category, approved: false, sections: list }, null, 2) + "\n");
@@ -360,7 +360,8 @@ if (!existsSync(SECTIONS_FILE)) {
 }
 const SEC = readJson(SECTIONS_FILE);
 // the library's latest matching rules win over the copy in sections.json
-for (const sec of SEC.sections) if (CFG.sections[sec.id]) Object.assign(sec, { words: CFG.sections[sec.id].words ?? sec.words, proof: CFG.sections[sec.id].proof });
+// (a section marked "custom": true in sections.json keeps its own words: a day can tailor them, e.g. hallmark|916|bis)
+for (const sec of SEC.sections) if (CFG.sections[sec.id] && !sec.custom) Object.assign(sec, { words: CFG.sections[sec.id].words ?? sec.words, proof: CFG.sections[sec.id].proof });
 if (!SEC.approved) {
   console.log(`✗ The section list is not approved yet. Show it to the user; on their OK: npm run refs -- ${day} --approve`);
   process.exit(1);

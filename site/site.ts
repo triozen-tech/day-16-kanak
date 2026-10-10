@@ -1,26 +1,26 @@
 import type { SiteMeta, Theme } from "@/lib/site";
 
-// Placeholder: a new day starts here. Round 0 writes site/DESIGN.md, Round 1 rewrites this file for the brand.
-
+// Kanak Jewels · Day 16 (site/DESIGN.md): L17 symmetric monument, ivory-and-gold edition.
 export const meta: SiteMeta = {
-  name: "Showreel Kit",
-  title: "Showreel Kit — new site",
-  description: "Blank starting point for today's showcase site.",
-  loaderText: "Kit",
-  loader: true,
+  name: "Kanak Jewels",
+  title: "Kanak Jewels: hallmarked 22K gold, Jaipur",
+  description: "Concept website: a gold jewellery house in Jaipur. Bridal, temple, daily wear and gifting, every price itemised.",
+  loaderText: "Kanak",
+  // Round 2 adds the I31 coin-spin loader (site component); the engine loader stays off.
+  loader: false,
   cursor: true,
-  record: { duration: 30 },
+  record: { duration: 35 },
 };
 
 export const theme: Theme = {
-  bg: "#0e0e0f",
-  surface: "#18181a",
-  text: "#f2f2f0",
-  muted: "#9a9a96",
-  accent: "#f2f2f0",
-  accentText: "#0e0e0f",
-  line: "#2a2a2c",
-  fontDisplay: "system-ui, sans-serif",
-  fontBody: "system-ui, sans-serif",
-  radius: 0,
+  bg: "#F6EFE3", // ivory
+  surface: "#FBF7F0", // paper
+  text: "#2B2117", // ink
+  muted: "#6E5E4A", // 5.3:1 on ivory
+  accent: "#A87A2A", // gold: light, lines, highlights (buttons are ink, see site.css)
+  accentText: "#FBF7F0",
+  line: "#D9C8AC",
+  fontDisplay: "'Italiana', serif",
+  fontBody: "'Figtree Variable', sans-serif",
+  radius: 18,
 };

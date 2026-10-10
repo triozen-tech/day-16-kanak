@@ -45,7 +45,7 @@ const link = (site, q) => SITES[site].url.replace("{q}", encodeURIComponent(q));
 const business = SEC.category;
 
 const blocks = SEC.sections.map((sec, idx) => {
-  const words = CFG.sections[sec.id]?.search ?? sec.name.toLowerCase();
+  const words = sec.search ?? CFG.sections[sec.id]?.search ?? sec.name.toLowerCase(); // sections.json can tailor it per day
   // 5 different style words per section, rotating with the day and the section
   const start = (day * 3 + idx * 5) % STYLES.length;
   const style = Array.from({ length: 5 }, (_, k) => STYLES[(start + k) % STYLES.length]);
