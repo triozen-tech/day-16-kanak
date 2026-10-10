@@ -1,0 +1,73 @@
+/* SECTION-MENU layouts (components/sections). Import once in the page that shows them. */
+/* In the components layer so Tailwind utilities on the same element (bg-*, text-*, rounded-*) win. */
+@layer components {
+.sx {
+  --sx-radius: 18px;
+  background: var(--sx-bg);
+  color: var(--sx-text);
+  font-family: "Manrope Variable", "Instrument Sans Variable", system-ui, sans-serif;
+}
+.sx-display {
+  font-family: var(--sx-display-font);
+}
+/* display fonts (one per section, chosen by the layout) */
+.sx-f-condensed { --sx-display-font: var(--font-display-family, "Big Shoulders Display Variable"), sans-serif; }
+.sx-f-serif { --sx-display-font: "Fraunces Variable", Georgia, serif; }
+.sx-f-editorial { --sx-display-font: "Instrument Serif", Georgia, serif; }
+.sx-f-grotesk { --sx-display-font: "Space Grotesk Variable", system-ui, sans-serif; }
+.sx-f-wide { --sx-display-font: "Syne Variable", system-ui, sans-serif; }
+.sx-f-editorial .sx-display,
+.sx-f-serif .sx-display {
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+.sx-f-condensed .sx-display {
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+/* buttons */
+.sx-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.95em 1.7em;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s, color 0.3s;
+}
+.sx-btn:active {
+  transform: scale(0.97);
+}
+.sx-btn-solid {
+  background: var(--sx-accent);
+  color: var(--sx-accent-text);
+}
+.sx-btn-ghost {
+  border: 1px solid var(--sx-line);
+  color: var(--sx-text);
+}
+.sx-btn-ghost:hover {
+  background: color-mix(in srgb, var(--sx-text) 6%, transparent);
+}
+.sx-btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--sx-text);
+  background: linear-gradient(currentColor, currentColor) left bottom / 100% 1px no-repeat;
+  padding-bottom: 3px;
+}
+.sx-card {
+  background: var(--sx-surface);
+  border: 1px solid var(--sx-line);
+  border-radius: var(--sx-radius);
+}
+.sx-rule {
+  border-color: var(--sx-line);
+}
+}

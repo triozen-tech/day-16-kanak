@@ -1,0 +1,230 @@
+/* Styles for components/fx (import once: `import "@/components/fx/fx.css"` in the page that uses fx). */
+
+/* M49 shine: a bright band sweeps across the text */
+.fx-shine {
+  --shine: -30%;
+  background: linear-gradient(100deg, currentColor 0%, currentColor calc(var(--shine) - 12%), #fff calc(var(--shine) - 2%), #fff var(--shine), currentColor calc(var(--shine) + 12%), currentColor 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* M51 tilt card glare */
+.fx-glare {
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgba(255, 255, 255, 0.35), transparent 45%);
+  mix-blend-mode: soft-light;
+}
+
+/* X9 glitch cut: RGB copies + slices only during the burst (--gk 1 → 0) */
+.fx-glitch-scene {
+  opacity: 0;
+}
+.fx-glitch[data-scene="0"] .fx-glitch-scene[data-s="0"],
+.fx-glitch[data-scene="1"] .fx-glitch-scene[data-s="1"] {
+  opacity: 1;
+}
+.fx-glitch-r,
+.fx-glitch-b {
+  mix-blend-mode: screen;
+  opacity: calc(var(--gk, 0) * 0.9);
+}
+.fx-glitch-r {
+  filter: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='r'><feColorMatrix values='1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/></filter></svg>#r");
+  transform: translateX(var(--gx, 0));
+  clip-path: inset(calc(30% - var(--gk, 0) * 10%) 0 calc(40% - var(--gk, 0) * 20%) 0);
+}
+.fx-glitch-b {
+  filter: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='b'><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0'/></filter></svg>#b");
+  transform: translateX(calc(var(--gx, 0) * -1));
+  clip-path: inset(calc(55% - var(--gk, 0) * 20%) 0 calc(10% + var(--gk, 0) * 5%) 0);
+}
+.fx-scan {
+  top: var(--gy, 0%);
+  background: linear-gradient(180deg, transparent, rgba(234, 245, 255, 0.07), transparent);
+}
+
+/* M58 type shuffle: the colour cell behind a shuffling letter */
+.fx-shuffle .ts-char.is-shuffling {
+  background: var(--accent, #2f8cff);
+  color: #05080f;
+}
+
+/* M52 mesh fallback (no WebGL): three drifting radial lights */
+.fx-mesh::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(40% 40% at 30% 30%, var(--m1), transparent 70%),
+    radial-gradient(35% 35% at 70% 60%, var(--m2), transparent 70%),
+    radial-gradient(30% 30% at 50% 85%, var(--m3), transparent 70%);
+  filter: blur(30px);
+  animation: fx-mesh 14s ease-in-out infinite alternate;
+}
+@keyframes fx-mesh {
+  to {
+    transform: translate(6%, -4%) rotate(12deg) scale(1.1);
+  }
+}
+
+/* M61 light rays */
+.lr-ray {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent, #2f8cff) 70%, white), transparent 80%);
+  filter: blur(18px);
+  mix-blend-mode: screen;
+}
+
+/* M64 shimmer border button: a conic spark runs round the border */
+.fx-shimmer {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 1rem 2.2rem;
+  border-radius: 999px;
+  font-weight: 650;
+  color: #fff;
+  background: #0b1020;
+}
+.fx-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: 0;
+  border-radius: inherit;
+  background: #0b1020;
+}
+.fx-shimmer-spark {
+  position: absolute;
+  inset: -100%;
+  z-index: 0;
+  background: conic-gradient(from 0deg, transparent 0 300deg, var(--accent, #2f8cff) 330deg, #fff 345deg, transparent 360deg);
+  animation: fx-spin 2.4s linear infinite;
+}
+@keyframes fx-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* M71 magnetic button */
+.fx-magnetic {
+  padding: 1.1rem 2.4rem;
+  border-radius: 999px;
+  font-weight: 650;
+  color: #05080f;
+  background: var(--accent, #2f8cff);
+  will-change: transform;
+}
+
+/* never-frozen drift: a slow breathing push on scrubbed stages (the sticky stage itself does not move, so a flat part
+   of a scrub would be a frozen frame on camera). Uses the `scale` property, so it never fights GSAP transforms. */
+.fx-drift {
+  animation: fx-drift 7s ease-in-out infinite alternate;
+}
+@keyframes fx-drift {
+  from {
+    scale: 1;
+  }
+  to {
+    scale: 1.035;
+  }
+}
+
+html.is-static .fx-drift,
+html.is-static .fx-shimmer-spark,
+html.is-static .fx-mesh::before {
+  animation: none;
+}
+
+/* /lab title light (CSS only, so it already moves while the page is still loading) */
+.lab-glow {
+  background: radial-gradient(40% 50% at 50% 50%, color-mix(in srgb, var(--accent, #2f8cff) 45%, transparent), transparent 70%);
+  animation: lab-glow 1.6s linear infinite alternate;
+}
+@keyframes lab-glow {
+  from {
+    transform: translateX(-30%) scale(0.85);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateX(30%) scale(1.15);
+    opacity: 1;
+  }
+}
+
+/* X14 / M72 haze: soft drifting fog (CSS only, always moving, never a hard edge) */
+.fx-haze {
+  background:
+    radial-gradient(60% 50% at 30% 40%, rgba(214, 222, 232, 0.85), transparent 70%),
+    radial-gradient(50% 45% at 70% 60%, rgba(196, 206, 220, 0.8), transparent 70%),
+    linear-gradient(180deg, rgba(200, 210, 222, 0.55), rgba(160, 172, 190, 0.7));
+  background-size: 160% 160%, 150% 150%, 100% 100%;
+  animation: fx-haze 9s ease-in-out infinite alternate;
+  filter: blur(6px);
+}
+@keyframes fx-haze {
+  from {
+    background-position: 0% 0%, 100% 100%, 0 0;
+  }
+  to {
+    background-position: 100% 60%, 0% 30%, 0 0;
+  }
+}
+
+/* X18 / M74 stamp */
+.fx-stamp {
+  color: #05080f;
+  background: var(--accent, #2f8cff);
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.08), 0 18px 40px -12px rgba(0, 0, 0, 0.6);
+}
+
+/* M74 thrown curved path: two typed properties on separate keyframes → a curved arc in pure CSS */
+@property --tx {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+@property --ty {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+.fx-thrown {
+  translate: var(--tx) var(--ty);
+  animation:
+    fx-throw-x 2.7s linear infinite,
+    fx-throw-y 2.7s cubic-bezier(0.3, 0, 0.7, 1) infinite;
+}
+@keyframes fx-throw-x {
+  to {
+    --tx: 900%;
+  }
+}
+@keyframes fx-throw-y {
+  0%,
+  100% {
+    --ty: 0%;
+  }
+  50% {
+    --ty: -420%;
+  }
+}
+
+/* slow time-based pan for transition scenes (never frozen at the slow ends of a scrub) */
+.fx-pan {
+  animation: fx-pan 6s ease-in-out infinite alternate;
+}
+@keyframes fx-pan {
+  from {
+    translate: -2% -1%;
+  }
+  to {
+    translate: 2% 1%;
+  }
+}
+
+html.is-static .fx-pan,
+html.is-static .fx-haze,
+html.is-static .fx-thrown {
+  animation: none;
+}

@@ -1,0 +1,587 @@
+{
+  "_readme": "Sources for `npm run refs`, `npm run refs:search` and `npm run refs:login` (docs/REFERENCE-SOURCES.md). automated:false = browse by hand only: the collector never opens these hosts (refs:search only builds links to Pinterest, Dribbble and Behance). login:true = gets a tab in refs:login. search: {cat} = the slug from `cats` (first key whose words appear in the category, else `default`), {q} = the category words. item = regex for entry links on that page. visit: entry (open the entry, follow its 'visit site' link, visitSelector first) · direct (the item link IS the live site). strict = broad category buckets: only entries that mention the category. fallback = only used when the other galleries gave too few sources. sections = the section library (kind: top · grid · pdp · text (heading words) · email · footer; search = the words used on the search sheet); sectionPresets = suggested section list per business; otherPools = creative award-gallery pages for the 'any business' options; styleWords = rotating style words for the search sheet; brands = same-business live sites per category. Checked 2026-10-09.",
+  "sources": [
+    {
+      "id": "awwwards",
+      "name": "Awwwards",
+      "url": "https://www.awwwards.com/",
+      "login": true,
+      "loginUrl": "https://www.awwwards.com/login/",
+      "automated": true,
+      "terms": "no automated-access clause; robots.txt disallows /websites/? searches, so category pages only",
+      "search": "https://www.awwwards.com/websites/{cat}/",
+      "cats": {
+        "fashion|apparel|clothing|footwear|shoe|sneaker|jewel|watch": "fashion",
+        "hotel|hospitality|restaurant|cafe|coffee|food|bar": "hotel-restaurant",
+        "architect|interior|furniture|real estate": "architecture"
+      },
+      "default": "e-commerce",
+      "item": "^https://www\\.awwwards\\.com/sites/[a-z0-9-]+/?$",
+      "visit": "entry",
+      "own": [
+        "awwwards.com"
+      ],
+      "per": 2,
+      "visitSelector": "a.toolbar-bts__item[target=_blank][href^='http'], a.figure-rollover__bt[href^='http']",
+      "strict": true
+    },
+    {
+      "id": "onepagelove",
+      "name": "One Page Love",
+      "url": "https://onepagelove.com/",
+      "login": false,
+      "automated": true,
+      "terms": "no clause in /legal; robots.txt disallows /?s= searches, so tag/genre pages only (it also sells an API)",
+      "search": "https://onepagelove.com/{cat}",
+      "cats": {
+        "skin|beauty|cosmetic|makeup|fragrance|perfume|hair": "tag/beauty",
+        "food|drink|coffee|restaurant|cafe|bakery": "genre/restaurant",
+        "sport|fitness|gym": "genre/sport"
+      },
+      "default": "genre/product-physical",
+      "item": "\\?ref=onepagelove$",
+      "visit": "direct",
+      "per": 2
+    },
+    {
+      "id": "cssda",
+      "name": "CSS Design Awards",
+      "url": "https://www.cssdesignawards.com/",
+      "login": false,
+      "automated": true,
+      "terms": "no clause in /terms; robots.txt only blocks DotBot",
+      "search": "https://www.cssdesignawards.com/website-gallery?industry={cat}",
+      "cats": {
+        "skin|beauty|cosmetic|wellness|spa|fitness|health": "wellbeing",
+        "fashion|apparel|clothing|jewel|watch|shoe|footwear|sneaker": "fashion",
+        "food|drink|coffee|tea|restaurant|bakery|wine": "food%2Fdrink"
+      },
+      "default": "products",
+      "item": "^https://www\\.cssdesignawards\\.com/sites/[^/]+/\\d+/?$",
+      "visit": "entry",
+      "own": [
+        "cssdesignawards.com"
+      ],
+      "per": 2,
+      "visitSelector": "a.single-website__thumbnail[href^='http']",
+      "strict": true
+    },
+    {
+      "id": "cssnectar",
+      "name": "CSS Nectar",
+      "url": "https://cssnectar.com/",
+      "login": false,
+      "automated": true,
+      "terms": "no clause in /terms; robots.txt allows all",
+      "search": "https://cssnectar.com/?s={q}",
+      "item": "^https://(www\\.)?cssnectar\\.com/css-gallery-inspiration/[^/]+/?$",
+      "visit": "entry",
+      "own": [
+        "cssnectar.com"
+      ],
+      "per": 2
+    },
+    {
+      "id": "httpster",
+      "name": "Httpster",
+      "url": "https://httpster.net/",
+      "login": false,
+      "automated": true,
+      "terms": "no terms page and no robots.txt",
+      "search": "https://httpster.net/type/{cat}/",
+      "cats": {
+        "skin|beauty|cosmetic|fragrance|perfume": "beauty",
+        "fashion|apparel|clothing|jewel|shoe|footwear": "fashion",
+        "food|drink|coffee|tea|restaurant": "food-drink",
+        "fitness|wellness|health": "health"
+      },
+      "default": "online-store",
+      "item": "\\?ref=httpster",
+      "visit": "direct",
+      "per": 2
+    },
+    {
+      "id": "recent",
+      "name": "Recent (ex-Godly)",
+      "url": "https://recent.design/websites",
+      "login": false,
+      "automated": true,
+      "terms": "no terms page; robots.txt Allow: /. No category search: newest motion-led sites (fallback only: used when fewer than 4 sources found anything)",
+      "search": "https://recent.design/websites",
+      "item": "^https://recent\\.design/i/[a-z0-9]+-[a-z0-9-]+$",
+      "visit": "entry",
+      "own": [
+        "recent.design",
+        "godly.website"
+      ],
+      "per": 1,
+      "fallback": true
+    },
+    {
+      "id": "dribbble",
+      "name": "Dribbble",
+      "url": "https://dribbble.com/",
+      "login": true,
+      "loginUrl": "https://dribbble.com/session/new",
+      "automated": false,
+      "terms": "terms ban scraping and automated access faster than a person"
+    },
+    {
+      "id": "pinterest",
+      "name": "Pinterest",
+      "url": "https://www.pinterest.com/",
+      "login": true,
+      "loginUrl": "https://www.pinterest.com/login/",
+      "automated": false,
+      "terms": "terms ban access by automated means; robots.txt Disallow: /"
+    },
+    {
+      "id": "mobbin",
+      "name": "Mobbin",
+      "url": "https://mobbin.com/",
+      "login": true,
+      "loginUrl": "https://mobbin.com/login",
+      "automated": false,
+      "terms": "paid; terms ban copying by scraper/bot"
+    },
+    {
+      "id": "savee",
+      "name": "Savee",
+      "url": "https://savee.com/",
+      "login": true,
+      "loginUrl": "https://savee.com/login/",
+      "automated": false,
+      "terms": "terms ban scraping/crawling without written permission"
+    },
+    {
+      "id": "pageflows",
+      "name": "Page Flows",
+      "url": "https://pageflows.com/",
+      "login": true,
+      "loginUrl": "https://pageflows.com/login/",
+      "automated": false,
+      "terms": "paid; robots.txt disallows /search"
+    },
+    {
+      "id": "behance",
+      "name": "Behance",
+      "url": "https://www.behance.net/",
+      "login": false,
+      "automated": false,
+      "terms": "Adobe General Terms ban data scraping"
+    },
+    {
+      "id": "landbook",
+      "name": "Land-book",
+      "url": "https://land-book.com/",
+      "login": false,
+      "automated": false,
+      "terms": "terms ban bots, crawlers and scrapers"
+    },
+    {
+      "id": "codepen",
+      "name": "CodePen",
+      "url": "https://codepen.io/",
+      "login": false,
+      "automated": false,
+      "terms": "terms ban crawling / screen scraping"
+    },
+    {
+      "id": "webflow",
+      "name": "Made in Webflow",
+      "url": "https://webflow.com/made-in-webflow",
+      "login": false,
+      "automated": false,
+      "terms": "Acceptable Use Policy bans robots and page-scraping"
+    },
+    {
+      "id": "minimal",
+      "name": "Minimal Gallery",
+      "url": "https://minimal.gallery/",
+      "login": false,
+      "automated": false,
+      "terms": "legal bans scraping (personal viewing allowed)"
+    },
+    {
+      "id": "cosmos",
+      "name": "Cosmos",
+      "url": "https://www.cosmos.so/",
+      "login": false,
+      "automated": false,
+      "terms": "terms allow only generally available browsers (grey for scripts)"
+    },
+    {
+      "id": "lapa",
+      "name": "Lapa Ninja",
+      "url": "https://www.lapa.ninja/",
+      "login": false,
+      "automated": false,
+      "terms": "terms not verified (bot check blocked them)"
+    },
+    {
+      "id": "siteinspire",
+      "name": "SiteInspire",
+      "url": "https://www.siteinspire.com/",
+      "login": false,
+      "automated": false,
+      "terms": "terms not verified (bot check blocked them)"
+    },
+    {
+      "id": "codrops",
+      "name": "Codrops",
+      "url": "https://tympanus.net/codrops/",
+      "login": false,
+      "automated": false,
+      "terms": "terms not verified (bot check blocked them)"
+    },
+    {
+      "id": "fwa",
+      "name": "The FWA",
+      "url": "https://thefwa.com/",
+      "login": false,
+      "automated": false,
+      "terms": "terms not verified (page needs JS)"
+    }
+  ],
+  "denyHosts": [
+    "facebook.com",
+    "instagram.com",
+    "twitter.com",
+    "x.com",
+    "linkedin.com",
+    "youtube.com",
+    "tiktok.com",
+    "pinterest.com",
+    "vimeo.com",
+    "dribbble.com",
+    "behance.net",
+    "mobbin.com",
+    "github.com",
+    "google.com",
+    "apple.com",
+    "apps.apple.com",
+    "play.google.com",
+    "medium.com",
+    "tumblr.com",
+    "typeform.com",
+    "shopify.com",
+    "webflow.com",
+    "framer.com",
+    "wordpress.org",
+    "awwwards.com",
+    "cssdesignawards.com",
+    "cssnectar.com",
+    "onepagelove.com",
+    "httpster.net",
+    "recent.design",
+    "godly.website",
+    "redcollar.co",
+    "unsection.com",
+    "lapa.ninja"
+  ],
+  "brands": {
+    "skincare|skin|beauty|cosmetic|serum": [
+      "https://www.glossier.com/",
+      "https://www.rhodeskin.com/",
+      "https://www.tatcha.com/",
+      "https://necessaire.com/",
+      "https://www.typology.com/",
+      "https://www.augustinusbader.com/",
+      "https://www.aesop.com/",
+      "https://www.byoma.com/"
+    ],
+    "jewellery|jewelry|ring|necklace|earring": [
+      "https://mejuri.com/",
+      "https://www.monicavinader.com/",
+      "https://www.messika.com/",
+      "https://sophiebuhai.com/",
+      "https://www.tiffany.com/",
+      "https://www.cartier.com/"
+    ],
+    "fragrance|perfume|scent|candle": [
+      "https://www.lelabofragrances.com/",
+      "https://www.byredo.com/",
+      "https://www.diptyqueparis.com/",
+      "https://www.franciskurkdjian.com/",
+      "https://www.bykilian.com/"
+    ],
+    "watch|watches|horology": [
+      "https://nomos-glashuette.com/",
+      "https://www.grand-seiko.com/",
+      "https://www.tudorwatch.com/",
+      "https://baltic-watches.com/",
+      "https://www.omegawatches.com/"
+    ],
+    "fashion|apparel|clothing|clothes": [
+      "https://www.cos.com/",
+      "https://www.jacquemus.com/",
+      "https://toteme-studio.com/",
+      "https://www.aimeleondore.com/",
+      "https://www.sezane.com/",
+      "https://www.arket.com/"
+    ],
+    "footwear|shoe|shoes|sneaker|trainer": [
+      "https://www.on.com/",
+      "https://www.allbirds.com/",
+      "https://www.veja-store.com/",
+      "https://www.salomon.com/",
+      "https://www.commonprojects.com/"
+    ],
+    "furniture|interior|home|decor|lighting": [
+      "https://www.hay.com/",
+      "https://www.muuto.com/",
+      "https://www.andtradition.com/",
+      "https://www.fermliving.com/",
+      "https://www.article.com/",
+      "https://www.vitra.com/"
+    ],
+    "coffee|tea|food|drink|beverage|bakery|chocolate": [
+      "https://bluebottlecoffee.com/",
+      "https://www.lacolombe.com/",
+      "https://www.graza.co/",
+      "https://flybyjing.com/",
+      "https://ghia.com/",
+      "https://www.oatly.com/"
+    ],
+    "tech|gadget|audio|headphone|speaker|electronics|phone": [
+      "https://nothing.tech/",
+      "https://teenage.engineering/",
+      "https://www.bang-olufsen.com/",
+      "https://www.sonos.com/",
+      "https://www.analogue.co/"
+    ],
+    "car|cars|automotive|vehicle|ev|motorcycle": [
+      "https://www.polestar.com/",
+      "https://rivian.com/",
+      "https://www.porsche.com/",
+      "https://lucidmotors.com/"
+    ],
+    "hotel|hospitality|resort|villa|travel": [
+      "https://www.aman.com/",
+      "https://www.sixsenses.com/",
+      "https://www.rosewoodhotels.com/",
+      "https://acehotel.com/",
+      "https://www.belmond.com/"
+    ],
+    "fitness|gym|yoga|wellness|sport": [
+      "https://www.whoop.com/",
+      "https://www.tonal.com/",
+      "https://www.aloyoga.com/",
+      "https://ouraring.com/",
+      "https://www.equinox.com/"
+    ]
+  },
+  "sections": {
+    "hero": {
+      "name": "Hero",
+      "kind": "top",
+      "want": "first screen: headline, product moment, nav",
+      "search": "hero section"
+    },
+    "shop": {
+      "name": "Shop / bestsellers",
+      "kind": "grid",
+      "want": "product cards: image, name, price, hover, quick add",
+      "search": "product grid"
+    },
+    "product": {
+      "name": "Product detail",
+      "kind": "pdp",
+      "want": "gallery, swatches / options, price, add to cart, sticky buy box",
+      "search": "product page"
+    },
+    "collections": {
+      "name": "Categories / collections",
+      "kind": "text",
+      "words": "shop by|categories|collections|explore the range|our range|discover",
+      "want": "how the range is split into categories",
+      "search": "categories section"
+    },
+    "ingredients": {
+      "name": "Ingredients",
+      "kind": "text",
+      "words": "ingredient|actives|botanical|what's inside|whats inside|made with|key components|formulated with",
+      "want": "showing what is inside the product",
+      "search": "ingredients section"
+    },
+    "howto": {
+      "name": "How to use / ritual",
+      "kind": "text",
+      "words": "how to use|ritual|routine|step 1|steps|apply|how it works|directions",
+      "want": "steps or a routine, easy to follow",
+      "search": "how to use section"
+    },
+    "results": {
+      "name": "Results / proof",
+      "kind": "text",
+      "words": "results|clinical|clinically|proven|before (and|&) after|tested|visible|dermatologist",
+      "want": "numbers, before/after, proof",
+      "search": "results before after"
+    },
+    "reviews": {
+      "name": "Reviews",
+      "kind": "text",
+      "words": "review|testimonial|customers say|people say|loved by|what our|★",
+      "want": "social proof: quotes, stars, faces",
+      "proof": "★|☆|stars|rated|verified|review",
+      "search": "reviews testimonials"
+    },
+    "story": {
+      "name": "Brand story",
+      "kind": "text",
+      "words": "our story|about us|founded|philosophy|mission|our promise|who we are|our approach|why we",
+      "want": "the brand's why, told visually",
+      "search": "about us brand story"
+    },
+    "features": {
+      "name": "Benefits / features",
+      "kind": "text",
+      "words": "benefits|why choose|features|designed for|built for|what makes",
+      "want": "3–6 benefits, icons or numbers",
+      "search": "features section"
+    },
+    "offers": {
+      "name": "Offers / sets",
+      "kind": "text",
+      "words": "gift|bundle|set|kit|offer|save \\d|limited edition",
+      "want": "bundles, gift sets, offers",
+      "search": "gift set offer"
+    },
+    "faq": {
+      "name": "FAQ",
+      "kind": "text",
+      "words": "faq|frequently asked|questions",
+      "want": "questions, accordion",
+      "search": "faq section"
+    },
+    "newsletter": {
+      "name": "Newsletter / sign-up",
+      "kind": "email",
+      "want": "email sign-up with a reward",
+      "search": "newsletter signup"
+    },
+    "footer": {
+      "name": "Footer",
+      "kind": "footer",
+      "want": "closing moment: wordmark, links, sign-up",
+      "search": "footer"
+    }
+  },
+  "sectionPresets": {
+    "skincare|skin|beauty|cosmetic|serum|makeup|hair": [
+      "hero",
+      "shop",
+      "product",
+      "ingredients",
+      "howto",
+      "results",
+      "reviews",
+      "story",
+      "footer"
+    ],
+    "fragrance|perfume|scent|candle": [
+      "hero",
+      "collections",
+      "product",
+      "ingredients",
+      "story",
+      "offers",
+      "reviews",
+      "footer"
+    ],
+    "jewellery|jewelry|watch|watches": [
+      "hero",
+      "collections",
+      "shop",
+      "product",
+      "story",
+      "offers",
+      "reviews",
+      "footer"
+    ],
+    "fashion|apparel|clothing|footwear|shoe|sneaker": [
+      "hero",
+      "collections",
+      "shop",
+      "product",
+      "story",
+      "reviews",
+      "newsletter",
+      "footer"
+    ],
+    "coffee|tea|food|drink|beverage|bakery|chocolate": [
+      "hero",
+      "shop",
+      "product",
+      "ingredients",
+      "howto",
+      "story",
+      "reviews",
+      "footer"
+    ],
+    "default": [
+      "hero",
+      "collections",
+      "shop",
+      "product",
+      "features",
+      "story",
+      "reviews",
+      "faq",
+      "footer"
+    ]
+  },
+  "otherPools": [
+    {
+      "source": "awwwards",
+      "search": "https://www.awwwards.com/websites/e-commerce/",
+      "take": 2
+    },
+    {
+      "source": "httpster",
+      "search": "https://httpster.net/type/online-store/",
+      "take": 3
+    },
+    {
+      "source": "onepagelove",
+      "search": "https://onepagelove.com/genre/e-commerce",
+      "take": 2
+    },
+    {
+      "source": "cssda",
+      "search": "https://www.cssdesignawards.com/website-gallery?feature=eCommerce",
+      "take": 2
+    },
+    {
+      "source": "recent",
+      "search": "https://recent.design/websites",
+      "take": 1
+    }
+  ],
+  "styleWords": [
+    "creative",
+    "editorial",
+    "3D",
+    "bold typography",
+    "minimal luxury",
+    "playful",
+    "glass",
+    "brutalist",
+    "interactive",
+    "scroll animation"
+  ],
+  "searchSites": {
+    "pinterest": {
+      "name": "Pinterest",
+      "url": "https://www.pinterest.com/search/pins/?q={q}"
+    },
+    "dribbble": {
+      "name": "Dribbble",
+      "url": "https://dribbble.com/search/{q}"
+    },
+    "behance": {
+      "name": "Behance",
+      "url": "https://www.behance.net/search/projects/{q}"
+    }
+  }
+}

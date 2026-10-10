@@ -1,0 +1,51 @@
+# The repo shows only the current project (see CLAUDE.md), code AND its assets:
+# raw/ (Flow images + Veo videos), public/frames/, public/images/, cover.jpg are TRACKED and pushed.
+# Any single asset over 50 MB goes through Git LFS (see .gitattributes, `npm run assets`).
+# Old sites live in their own day folders / repos; these stay local:
+archive/
+docs/SITES-LOG.md
+
+# recordings and final reel videos (never pushed)
+recordings/
+*.mov
+/*.mp4
+/reels/
+
+# Python venvs (`npm run cutout` uses .venv-cutout/; recreate with the command in scripts/cutout.mjs)
+.venv*/
+venv/
+__pycache__/
+
+# dependencies, builds, secrets, system files
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+.env*
+.DS_Store
+
+# other tools' local worktrees (they hold copies of older sites)
+.kilo/
+
+# day-folder link to the template (written by `npm run new-day`, used by `npm run sync-kit`)
+.kit.json
+
+# large renders / exports (keep out of the template repo)
+renders/
+*.blend1
+*.exr
+*.psd
+*.zip
+
+# secrets and keys (never commit)
+*.pem
+*.key
+*.p12
+.npmrc
+*credentials*.json
+
+# reference boards (npm run refs): private inspiration, never published; the saved-login browser profile
+# lives outside every project (~/.triozen-ref-browser) and must never be copied in
+refs/
+.triozen-ref-browser/

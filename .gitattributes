@@ -1,0 +1,5 @@
+# Git LFS: only assets OVER 50 MB go here (GitHub's free LFS quota is 1 GB, so small files stay normal git).
+# `npm run assets` lists any file over 50 MB that is not in LFS. To move one:
+#   brew install git-lfs && git lfs install      (once per Mac)
+#   git lfs track "raw/<file>.mp4"               (adds its exact path below)
+# Videos are the usual suspects: raw/*.mp4 and raw/*.webm.
